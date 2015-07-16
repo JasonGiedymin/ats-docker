@@ -23,12 +23,7 @@ tmux screen ccache python-sphinx doxygen python-lxml
 
 # Add repo (AFTER package installs)
 ADD ./trafficserver $BUILD_LOC
-# ADD ./trafficserver/.git $BUILD_LOC/.git
-# ADD ./trafficserver/.gitignore $BUILD_LOC/.gitignore
-# ADD ./trafficserver/.gitmodules $BUILD_LOC/.gitmodules
+ADD ./ats.sh $BUILD_LOC/ats.sh
 
 # Build
-RUN autoreconf -if
-RUN ./configure --prefix=$PREFIX
-RUN make
-RUN sudo make install
+RUN bash $BUILD_LOC/ats.sh
