@@ -2,6 +2,6 @@
 
 set -e
 
-bash dockerfiles/build.sh base
-bash dockerfiles/build.sh devel
-bash dockerfiles/build.sh master
+bash docker-driver.sh base # base image
+bash docker-driver.sh devel # current dev image
+bash docker-driver.sh branch master # current master image

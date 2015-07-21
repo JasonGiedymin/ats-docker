@@ -1,9 +1,15 @@
 # TODO
 
 - [x] devel build (whatever is in `trafficserver/`)
-- [*] dev build flags which take existing repo
-- [*] dev repo flag which clones a fresh master copy
-- [*] docker releases for every ats release
+- [x] dev build flags which take existing repo
+- [x] dev repo flag which clones a fresh master copy
+- [x] docker releases for every ats release
+  - [x] docker template files
+  - [x] new driver script to
+    - [x] build base image
+    - [x] build devel image
+    - [x] build any branch
+  - [x] remove previous image before building
 - [ ] config mounts
 - [ ] faster builds (cpu, cache, etc...)
 - [ ] production-ish dockerfile for latest version
