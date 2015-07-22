@@ -11,6 +11,8 @@
     - [x] build any branch
   - [x] remove previous image before building
 - [ ] config mounts
+  - [ ] devel
+  - [ ] master
 - [ ] faster builds (cpu, cache, etc...)
 - [ ] production-ish dockerfile for latest version
 - [ ] kubernates config
