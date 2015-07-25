@@ -10,14 +10,24 @@
     - [x] build devel image
     - [x] build any branch
   - [x] remove previous image before building
-- [*] config mounts:
+- [x] config mounts:
   - [x] fingerprint config file `./proxy/config/records.config.default.in`
-  - [ ] devel
-  - [ ] master
+  - [x] devel
+  - [x] master
+- [x] expose ports
+- [x] add all configs
+- [x] Run script (traffic_cop)
+- [x] Run with mounted configs
+- [x] Add FAQ
+- [x] Redo run but within ats and command parsing
+- [ ] Run specifying a single remap config file
+- [ ] Run Cache mount
+- [ ] gatling perf test
+- [ ] integration tests:
+    - [ ] integration tests
+    - [ ] Jenkins (repo supplied)
+    - [ ] with GCE container engine
+- [ ] kubernates pods/rc
+- [ ] perf tuning docker
 - [ ] faster builds (cpu, cache, etc...)
-- [ ] production-ish dockerfile for latest version
-- [ ] kubernates config
-- [ ] integration tests
-- [ ] integration tests with GCE container engine
-- [ ] gatling test
-- [ ] perf tuning
+- [ ] production review

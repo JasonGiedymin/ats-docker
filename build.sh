@@ -1,4 +1,7 @@
 #!/bin/bash
+# This script builds all desired images.
+# If you request a specific image or branch use the
+# docker-driver.sh manually (see below for examples)
 
 set -e
 

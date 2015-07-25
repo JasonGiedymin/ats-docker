@@ -4,6 +4,7 @@ MAINTAINER apache-traffic-server
 # Environment
 ENV BUILD_LOC /trafficserver
 ENV PREFIX /usr/local
+ENV LD_LIBRARY_PATH /usr/local/lib
 
 # Set working dir
 WORKDIR $BUILD_LOC
