@@ -20,17 +20,14 @@ function runWithMount() {
   local image=ats:$1
   echo "running $image with mounted volumes..."
 
-  docker run -it \
-  $MOUNT_OPTS \
-  $image
+  docker run -ditP $MOUNT_OPTS $image
 }
 
 function runWithoutMount() {
   local image=ats:$1
   echo "running $image..."
 
-  docker run -it \
-  $image
+  docker run -ditP $image
 }
 
 function run() {
@@ -45,14 +42,14 @@ function usage() {
 cat<<EOF
 
 Usage:
-  $0 <options> <command>
+  $0 <command> <command-options>
 
 Commands:
   usage          : displays this usage screen
   devel          : builds devel
   tag <some_tag> : builds some user specified tag
 
-Options:
+Tag Options:
   -m --mount     : uses mount as specified by MOUNT_OPTS. Override if nessary.
                    MOUNT_OPTS="$MOUNT_OPTS"
 

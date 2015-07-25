@@ -32,6 +32,11 @@ Other commands available are `devel` and `tag`.
 
 To run a specific tag with config mounts: `bash run.sh -m tag master`
 
+To detach from a running container in console mode:
+```bash
+ctrl+pq
+```
+
 ### Debugging
 
 Once a container is running you may find it useful to connect with it.

@@ -20,6 +20,10 @@
 - [x] Run with mounted configs
 - [x] Add FAQ
 - [x] Redo run but within ats and command parsing
+- [x] Fix ATS script loop
+- [x] On CMD run traffic_cop
+- [x] On CMD also tail logs
+- [x] On docker run expose all ports and detach
 - [ ] Run specifying a single remap config file
 - [ ] Run Cache mount
 - [ ] gatling perf test

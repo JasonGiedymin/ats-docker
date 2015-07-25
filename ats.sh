@@ -52,7 +52,7 @@ function fingerprint() {
 
 function run() {
   log "Running traffic server via traffic_cop..."
-  /usr/local/bin/traffic_cop
+  $(/usr/local/bin/traffic_cop &) && sleep 5 && tail -f /usr/local/var/log/trafficserver/*
 }
 
 function usage() {
@@ -72,7 +72,7 @@ Options:
 EOF
 }
 
-function build() {
+function buildParse() {
   log "building branch $ATS_BRANCH"
 
   case $ATS_BRANCH in
@@ -128,7 +128,7 @@ case $COMMAND in
   build)
     shift
     parse "$@"
-    build
+    buildParse
     ;;
   run)
     shift
