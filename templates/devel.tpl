@@ -3,5 +3,27 @@ MAINTAINER apache-traffic-server
 
 ADD ./trafficserver $BUILD_LOC
 
+# proxy port     - proxy.config.http.server_ports
+EXPOSE 8080
+
+# cluster port   - proxy.config.cluster.cluster_port
+EXPOSE 8086
+
+# cluster rsport - proxy.config.cluster.rsport
+EXPOSE 8088
+
+# cluster mcport - proxy.config.cluster.mcport
+EXPOSE 8089
+
+# connect ports  - proxy.config.http.connect_ports
+EXPOSE 443
+
+# connect ports  - proxy.config.http.connect_ports
+EXPOSE 563
+
 # Build
-RUN bash /ats.sh
+# RUN bash /ats.sh build # default will build devel
+RUN bash /ats.sh build -b=%s
+
+# Run the service
+CMD bash /ats.sh run

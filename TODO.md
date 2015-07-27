@@ -3,18 +3,38 @@
 - [x] devel build (whatever is in `trafficserver/`)
 - [x] dev build flags which take existing repo
 - [x] dev repo flag which clones a fresh master copy
-- [x] docker releases for every ats release
+- [x] docker releases for every ats release:
   - [x] docker template files
-  - [x] new driver script to
+  - [x] new driver script to:
     - [x] build base image
     - [x] build devel image
     - [x] build any branch
   - [x] remove previous image before building
-- [ ] config mounts
+- [x] config mounts:
+  - [x] fingerprint config file `./proxy/config/records.config.default.in`
+  - [x] devel
+  - [x] master
+- [x] expose ports
+- [x] add all configs
+- [x] Run script (traffic_cop)
+- [x] Run with mounted configs
+- [x] Add FAQ
+- [x] Redo run but within ats and command parsing
+- [x] Fix ATS script loop
+- [x] On CMD run traffic_cop
+- [x] On CMD also tail logs
+- [x] On docker run expose all ports and detach
+- [ ] Run specifying a single remap config file
+- [ ] Run Cache mount
+- [ ] Better logging?
+- [ ] gatling perf test
+- [ ] docker compose?
+- [ ] compose with logging framework?
+- [ ] integration tests:
+    - [ ] integration tests
+    - [ ] Jenkins (repo supplied)
+    - [ ] with GCE container engine
+- [ ] kubernates pods/rc
+- [ ] perf tuning docker
 - [ ] faster builds (cpu, cache, etc...)
-- [ ] production-ish dockerfile for latest version
-- [ ] kubernates config
-- [ ] integration tests
-- [ ] integration tests with GCE container engine
-- [ ] gatling test
-- [ ] perf tuning
+- [ ] production review
