@@ -26,7 +26,10 @@
 - [x] On docker run expose all ports and detach
 - [ ] Run specifying a single remap config file
 - [ ] Run Cache mount
+- [ ] Better logging?
 - [ ] gatling perf test
+- [ ] docker compose?
+- [ ] compose with logging framework?
 - [ ] integration tests:
     - [ ] integration tests
     - [ ] Jenkins (repo supplied)
