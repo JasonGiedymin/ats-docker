@@ -1,6 +1,30 @@
 # ats-docker
 Apache TrafficServer Dockerfiles
 
+## Goals
+TODO
+
+## TLDR
+
+```bash
+# Build images first
+bash build.sh # builds base, devel (local repo), and master (master repo)
+
+# Run containers
+bash run.sh devel # runs devel (local dev repo ./trafficserver)
+# OR
+bash run.sh tag master # runs master
+# OR with mounted config files which are in ./configs
+bash run.sh devel -m
+# OR
+bash run.sh tag master -m
+
+# See Logs of running container
+docker logs <container id from after running the above>
+
+# Thats it!
+```
+
 ## Building
 
 ### All
@@ -73,3 +97,6 @@ Below are common docker issues.
     # stop and/or kill the pid, then start the daemon.
     sudo /etc/init.d/docker restart
     ```
+
+  * *NOTE*: please note that traffic_cop will switch users and the ENV var will not be
+    carried over.

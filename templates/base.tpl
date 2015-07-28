@@ -23,5 +23,11 @@ git
 RUN sudo apt-get install -y gdb valgrind git ack-grep curl \
 tmux screen ccache python-sphinx doxygen python-lxml
 
+# Snapshot dir
+RUN mkdir -p /usr/local/etc/trafficserver/snapshots
+
 # Add helper
 ADD ./ats.sh /ats.sh
+
+# Add Dockerfile for reference
+ADD ./_Dockerfile /Dockerfile

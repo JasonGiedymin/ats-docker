@@ -24,6 +24,17 @@
 - [x] On CMD run traffic_cop
 - [x] On CMD also tail logs
 - [x] On docker run expose all ports and detach
+
+v0.2.5 - Run
+- [x] FIX shared lib, due to user switching of TS daemons
+  - [x] add to devel configs
+  - [x] add `/usr/local/etc/trafficserver/snapshots` dir to base template
+  - [x] add config param to ats command
+  - [x] Readme note that to override, simply supply own configs
+  - [x] move fingerprinting and user switching toggle to generated files prior to `make install`
+        rather than using the template `.in` file.
+- [x] Embed dockerfile
+
 - [ ] Run specifying a single remap config file
 - [ ] Run Cache mount
 - [ ] Better logging?
