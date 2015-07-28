@@ -47,7 +47,20 @@ function fingerprint() {
   hash=$1
   log "fingerprinting records.config"
   header="##############################################################################\n# Commit: $hash"
-  sed -i "1i$header" ./proxy/config/records.config.default.in
+  sed -i "1i$header" ./proxy/config/records.config.default
+}
+
+function fixSharedLibUserSwitching() {
+cat << EOF >> ./proxy/config/records.config.default
+
+##############################################################################
+# Docker CMD runs traffic_cop, user switching to other daemons required
+# disabling. For a more secure system consider supplying your own configs and
+# further modify the container with finite permissions.
+##############################################################################
+CONFIG proxy.config.admin.user_id STRING #-1
+
+EOF
 }
 
 function run() {
@@ -85,8 +98,9 @@ function buildParse() {
         echo "Source not present for devel. Could not find autoconf file 'configure.ac'."
         exit 1
       fi
-      fingerprint "devel"
       build
+      fingerprint "devel"
+      fixSharedLibUserSwitching
       install
       ;;
     *)
@@ -94,8 +108,9 @@ function buildParse() {
       clone
       checkout $ATS_BRANCH
       submodules
-      fingerprint $(githash)
       build
+      fingerprint $(githash)
+      fixSharedLibUserSwitching
       install
       ;;
   esac

@@ -1,6 +1,9 @@
 FROM ats:base
 MAINTAINER apache-traffic-server
 
+# Add Dockerfile for reference
+ADD ./_Dockerfile /Dockerfile
+
 ADD ./trafficserver $BUILD_LOC
 
 # proxy port     - proxy.config.http.server_ports

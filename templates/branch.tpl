@@ -1,6 +1,9 @@
 FROM ats:base
 MAINTAINER apache-traffic-server
 
+# Add Dockerfile for reference
+ADD ./_Dockerfile /Dockerfile
+
 # proxy port     - proxy.config.http.server_ports
 EXPOSE 8080
 
