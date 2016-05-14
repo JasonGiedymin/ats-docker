@@ -1,5 +1,8 @@
-FROM ats:base
+FROM ats:source
 MAINTAINER apache-traffic-server
+
+# Volumes
+VOLUME /ccache
 
 # Add Dockerfile for reference
 ADD ./_Dockerfile /Dockerfile
@@ -22,8 +25,27 @@ EXPOSE 443
 # connect ports  - proxy.config.http.connect_ports
 EXPOSE 563
 
+# clone
+# RUN git clone https://github.com/apache/trafficserver.git .
+
+# RUN git fetch origin
+
+# RUN git checkout %s
+
+# submodules
+# RUN git submodule init
+# RUN git submodule update
+
 # Build
-RUN bash /ats.sh build -b=%s
+# RUN autoreconf -if
+# RUN ./configure --prefix=$PREFIX --enable-ccache
+# RUN make
+
+# ccache stats
+# RUN ccache -s
+
+# Build
+CMD bash /ats.sh build -b="%s"
 
 # Run the service
-CMD bash /ats.sh run
+# CMD bash /ats.sh run

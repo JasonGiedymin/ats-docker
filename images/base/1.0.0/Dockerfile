@@ -12,6 +12,25 @@ ENV LD_LIBRARY_PATH /usr/local/lib
 # Set working dir
 WORKDIR $BUILD_LOC
 
+# proxy port     - proxy.config.http.server_ports
+EXPOSE 8080
+
+# cluster port   - proxy.config.cluster.cluster_port
+EXPOSE 8086
+
+# cluster rsport - proxy.config.cluster.rsport
+EXPOSE 8088
+
+# cluster mcport - proxy.config.cluster.mcport
+EXPOSE 8089
+
+# connect ports  - proxy.config.http.connect_ports
+EXPOSE 443
+
+# connect ports  - proxy.config.http.connect_ports
+EXPOSE 563
+
+
 # Install reqs
 RUN sudo apt-get update
 RUN sudo apt-get -y install software-properties-common
@@ -35,8 +54,11 @@ RUN ccache -F 0 && ccache -M 0
 # Snapshot dir
 RUN mkdir -p /usr/local/etc/trafficserver/snapshots
 
-# Add helper
-ADD ./ats.sh /ats.sh
-
 # Add Dockerfile for reference
-ADD ./_Dockerfile /Dockerfile
+ADD ./Dockerfile /Dockerfile
+
+# Add helper
+# ADD ./ats.sh /ats.sh
+
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]

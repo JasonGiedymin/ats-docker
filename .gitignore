@@ -29,3 +29,6 @@
 
 # Generated files
 _Dockerfile
+
+# ATS Container Files
+ccache/

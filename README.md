@@ -2,7 +2,17 @@
 Apache TrafficServer Dockerfiles
 
 ## Goals
-TODO
+
+TODO:
+
+  - [x] base image should have cloned repo
+  - [x] modify template to use above new base image
+  - [x] ccache
+  - [ ] one image for base
+    - [ ] build it
+  - [ ] one image for building
+  - [ ] same image for running
+  - [ ] same image but hardcopy the version
 
 ## TLDR
 

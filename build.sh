@@ -5,6 +5,7 @@
 
 set -e
 
-bash docker-driver.sh base # base image
-bash docker-driver.sh devel # current dev image
-bash docker-driver.sh branch master # current master image
+time bash docker-driver.sh base # build base image
+time bash docker-driver.sh source "6.1.1" # base source image
+time bash docker-driver.sh branch master # current master image running on top of source
+time bash docker-driver.sh devel # current dev image

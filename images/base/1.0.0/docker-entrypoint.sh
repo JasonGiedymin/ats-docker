@@ -7,50 +7,50 @@ BUILD_LOC=${BUILD_LOC:-/trafficserver}
 ATS_BRANCH=devel
 PREFIX=${PREFIX:-/usr/local}
 
-function log() {
+log() {
   printf "%s $1\n" "-->"
 }
 
-function clone() {
+clone() {
   log "cloning repo"
   git clone --branch $1 https://github.com/apache/trafficserver.git .
 }
 
-function checkout() {
+checkout() {
   log "switching to branch $1"
   git checkout $1
 }
 
-function submodules() {
+submodules() {
   log "initializing submodules"
   git submodule init
   git submodule update
 }
 
-function build() {
+build() {
   log "building source"
   autoreconf -if
   ./configure --prefix=$PREFIX --enable-ccache
   make
 }
 
-function install() {
+install() {
   log "installing..."
   sudo make install
 }
 
-function githash() {
+githash() {
   printf $(git rev-parse HEAD)
 }
 
-function fingerprint() {
+fingerprint() {
   hash=$1
   log "fingerprinting records.config"
   header="##############################################################################\n# Commit: $hash"
   sed -i "1i$header" ./proxy/config/records.config.default
 }
 
-function fixSharedLibUserSwitching() {
+fixSharedLibUserSwitching() {
 cat << EOF >> ./proxy/config/records.config.default
 
 ##############################################################################
@@ -63,12 +63,12 @@ CONFIG proxy.config.admin.user_id STRING #-1
 EOF
 }
 
-function run() {
+run() {
   log "Running traffic server via traffic_cop..."
   $(/usr/local/bin/traffic_cop &) && sleep 5 && tail -f /usr/local/var/log/trafficserver/*
 }
 
-function usage() {
+usage() {
 cat<<EOF
 
 Usage:
@@ -85,7 +85,7 @@ Options:
 EOF
 }
 
-function buildParse() {
+buildParse() {
   log "building branch $ATS_BRANCH"
 
   case $ATS_BRANCH in
@@ -116,7 +116,7 @@ function buildParse() {
   esac
 }
 
-function parse() {
+parse() {
   if [ ! -n "$0" ]; then
     echo "You passed the following options: $@"
   fi
@@ -132,8 +132,6 @@ function parse() {
     esac
   done
 }
-
-# pushd $BUILD_LOC
 
 case $COMMAND in
   usage)
@@ -155,5 +153,3 @@ case $COMMAND in
     usage
     ;;
 esac
-
-# popd

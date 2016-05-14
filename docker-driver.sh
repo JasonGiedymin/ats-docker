@@ -6,6 +6,14 @@
 # fashion
 #
 # Author: Jason Giedymin <jasong@apache.org>
+#
+# Issues?
+# Consider:
+#   docker rmi $( docker images | grep '<none>' | tr -s ' ' | cut -d ' ' -f 3)
+#   docker rm $( docker ps -a | grep 'ats:base' | tr -s ' ' | cut -d ' ' -f 1)
+#     OR
+#   docker rm $( docker ps -a | grep 'ats:' | tr -s ' ' | cut -d ' ' -f 1)
+#
 
 #
 # == SETUP ==
@@ -54,12 +62,20 @@ function build() {
   printf "\n--> Completed $OWNER:$TAG\n"
 }
 
+buildsource() {
+  printf "\n\n--> Building $OWNER:source from branch $TAG from $DOCKERFILE\n"
+
+  docker build --rm -t $OWNER:source -f $DOCKERFILE .
+
+  printf "\n--> Completed $OWNER:source from branch $TAG\n"
+}
+
 function generateDockerfile() {
   local tempDockerfile=_Dockerfile
   local branch=$1.tpl
   local file=$(< templates/$branch)
   printf "\n---------------Dockerfile---------------\n"
-  printf "$file" $TAG | tee $DOCKERFILE
+  printf "$file" $TAG $TAG | tee $DOCKERFILE
   printf "\n----------------------------------------\n"
 }
 
@@ -79,6 +95,11 @@ function remove() {
   fi;
 }
 
+run() {
+  echo "--> Running container ats:$1 ..."
+  docker run --rm -v $(pwd)/ccache:/ccache ats:$1
+}
+
 function main() {
   case "$IMAGE" in
     branch)
@@ -88,6 +109,7 @@ function main() {
       generateDockerfile branch
       remove
       build # remember base relies on $TAG
+      run $TAG
       ;;
     devel)
       TAG=devel
@@ -96,6 +118,16 @@ function main() {
       generateDockerfile devel
       remove
       build # remember base relies on $TAG
+      run $TAG
+      ;;
+    source)
+      testReqs
+      checkTag
+      info
+      generateDockerfile source
+      remove
+      buildsource # remember base relies on $TAG
+      run "source"
       ;;
     base)
       TAG=base
@@ -104,6 +136,7 @@ function main() {
       generateDockerfile base
       remove
       build # remember base relies on $TAG
+      # base image doesn't run anything
       ;;
   esac
 }
