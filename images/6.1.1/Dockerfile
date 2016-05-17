@@ -9,27 +9,12 @@ ENV BUILD_LOC /trafficserver
 ENV PREFIX /usr/local
 ENV LD_LIBRARY_PATH /usr/local/lib
 
+# Disable ccache for official images
+ENV CCACHE_DISABLE 1
+
+
 # Set working dir
 WORKDIR $BUILD_LOC
-
-# proxy port     - proxy.config.http.server_ports
-EXPOSE 8080
-
-# cluster port   - proxy.config.cluster.cluster_port
-EXPOSE 8086
-
-# cluster rsport - proxy.config.cluster.rsport
-EXPOSE 8088
-
-# cluster mcport - proxy.config.cluster.mcport
-EXPOSE 8089
-
-# connect ports  - proxy.config.http.connect_ports
-EXPOSE 443
-
-# connect ports  - proxy.config.http.connect_ports
-EXPOSE 563
-
 
 # Install reqs
 RUN sudo apt-get update
@@ -43,13 +28,7 @@ git
 
 # Install extras
 RUN sudo apt-get install -y gdb valgrind git ack-grep curl \
-tmux screen ccache python-sphinx doxygen python-lxml
-
-# Enable ccache
-ENV PATH "/usr/lib/ccache:$PATH"
-ENV CCACHE_DIR /ccache/
-
-RUN ccache -F 0 && ccache -M 0
+tmux screen python-sphinx doxygen python-lxml
 
 # Snapshot dir
 RUN mkdir -p /usr/local/etc/trafficserver/snapshots
@@ -57,8 +36,22 @@ RUN mkdir -p /usr/local/etc/trafficserver/snapshots
 # Add Dockerfile for reference
 ADD ./Dockerfile /Dockerfile
 
-# Add helper
-# ADD ./ats.sh /ats.sh
+# clone
+# RUN git clone https://github.com/apache/trafficserver.git .
 
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
+# RUN git fetch origin
+
+# RUN git checkout %s
+
+# submodules
+# RUN git submodule init
+# RUN git submodule update
+
+# Build
+# RUN autoreconf -if
+# RUN ./configure --prefix=$PREFIX --enable-ccache
+# RUN make
+
+COPY docker-entrypoint.sh /
+RUN bash /docker-entrypoint.sh build -b="6.1.1"
+ENTRYPOINT ["bash", "/docker-entrypoint.sh", "run"]

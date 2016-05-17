@@ -35,6 +35,20 @@ v0.2.5 - Run
         rather than using the template `.in` file.
 - [x] Embed dockerfile
 
+v0.3.0 - Build
+- [x] base image should have cloned repo
+- [x] modify template to use above new base image
+- [x] ccache
+- [x] images, modify docker-entry so that only run exits
+
+v0.4.0 - Enhance
+- [x] faster builds (cpu, cache, etc...)
+- [x] build and run vet
+- [x] parallel build flags
+- [x] bring back devel
+- [ ] fix weird tty background running issue 
+- [ ] vet 6.x.x releases
+- [ ] ccache data container option
 - [ ] Run specifying a single remap config file
 - [ ] Run Cache mount
 - [ ] Better logging?
@@ -47,5 +61,4 @@ v0.2.5 - Run
     - [ ] with GCE container engine
 - [ ] kubernates pods/rc
 - [ ] perf tuning docker
-- [ ] faster builds (cpu, cache, etc...)
 - [ ] production review

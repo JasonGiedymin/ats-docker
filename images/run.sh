@@ -6,7 +6,8 @@ LOCAL_CONFIG=/configs # this will be appended, this is not a fully qualified pat
 # DOCKER_CONFIG=/trafficserver/proxy/config/records.config.default.in
 DOCKER_CONFIG=/usr/local/etc/trafficserver
 MOUNT_OPTS="-v $(PWD)$LOCAL_CONFIG:$DOCKER_CONFIG"
-USE_MOUNT=${USE_MOUNT:false}
+USE_MOUNT=${USE_MOUNT:-false}
+OWNER=${OWNER:-trafficserver}
 
 function checkTag() {
   if [ -z $TAG ]; then
@@ -17,15 +18,15 @@ function checkTag() {
 }
 
 function runWithMount() {
-  local image=ats:$1
-  echo "running $image with mounted volumes..."
+  local image=$OWNER:$1
+  # echo "running $image with mounted volumes..."
 
   docker run -ditP $MOUNT_OPTS $image
 }
 
 function runWithoutMount() {
-  local image=ats:$1
-  echo "running $image..."
+  local image=$OWNER:$1
+  # echo "running $image..."
 
   docker run -ditP $image
 }

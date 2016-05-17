@@ -1,4 +1,4 @@
-FROM ats:base
+FROM ats:source
 MAINTAINER apache-traffic-server
 
 # Volumes
@@ -28,8 +28,7 @@ EXPOSE 443
 EXPOSE 563
 
 # Build
-# RUN bash /ats.sh build # default will build devel
-CMD bash /ats.sh build -b="%s"
+CMD bash /ats.sh build -b="%s" --ccache --parallel
 
 # Run the service
 # CMD bash /ats.sh run

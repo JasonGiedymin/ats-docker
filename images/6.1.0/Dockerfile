@@ -9,6 +9,9 @@ ENV BUILD_LOC /trafficserver
 ENV PREFIX /usr/local
 ENV LD_LIBRARY_PATH /usr/local/lib
 
+# Disable ccache for official images
+ENV CCACHE_DISABLE 1
+
 # Set working dir
 WORKDIR $BUILD_LOC
 
@@ -24,19 +27,14 @@ git
 
 # Install extras
 RUN sudo apt-get install -y gdb valgrind git ack-grep curl \
-tmux screen ccache python-sphinx doxygen python-lxml
-
-# Enable ccache
-ENV PATH "/usr/lib/ccache:$PATH"
-ENV CCACHE_DIR /ccache/
-
-RUN ccache -F 0 && ccache -M 0
+tmux screen python-sphinx doxygen python-lxml
 
 # Snapshot dir
 RUN mkdir -p /usr/local/etc/trafficserver/snapshots
 
-# Add helper
-ADD ./scripts/ats.sh /ats.sh
-
 # Add Dockerfile for reference
-ADD ./_Dockerfile /Dockerfile
+ADD ./Dockerfile /Dockerfile
+
+COPY docker-entrypoint.sh /
+RUN bash /docker-entrypoint.sh build -b="6.1.0"
+ENTRYPOINT ["bash", "/docker-entrypoint.sh", "run"]

@@ -1,13 +1,18 @@
-FROM ubuntu
+FROM ats:devel
 MAINTAINER apache-traffic-server
 
 # Volumes
 VOLUME /ccache
+VOLUME /trafficserver
 
 # Environment
 ENV BUILD_LOC /trafficserver
 ENV PREFIX /usr/local
 ENV LD_LIBRARY_PATH /usr/local/lib
+
+# Disable ccache for official images
+ENV CCACHE_DISABLE 1
+
 
 # Set working dir
 WORKDIR $BUILD_LOC
@@ -26,17 +31,12 @@ git
 RUN sudo apt-get install -y gdb valgrind git ack-grep curl \
 tmux screen ccache python-sphinx doxygen python-lxml
 
-# Enable ccache
-ENV PATH "/usr/lib/ccache:$PATH"
-ENV CCACHE_DIR /ccache/
-
-RUN ccache -F 0 && ccache -M 0
-
 # Snapshot dir
 RUN mkdir -p /usr/local/etc/trafficserver/snapshots
 
-# Add helper
-ADD ./scripts/ats.sh /ats.sh
-
 # Add Dockerfile for reference
-ADD ./_Dockerfile /Dockerfile
+ADD ./Dockerfile /Dockerfile
+
+COPY docker-entrypoint.sh /
+RUN bash /docker-entrypoint.sh build -b="devel"
+ENTRYPOINT ["bash", "/docker-entrypoint.sh", "run"]

@@ -101,6 +101,8 @@ run() {
 }
 
 function main() {
+  pushd ../
+
   case "$IMAGE" in
     branch)
       testReqs
@@ -139,6 +141,8 @@ function main() {
       # base image doesn't run anything
       ;;
   esac
+
+  popd
 }
 
 main

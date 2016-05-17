@@ -32,3 +32,4 @@ _Dockerfile
 
 # ATS Container Files
 ccache/
+trafficserver/

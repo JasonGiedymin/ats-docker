@@ -6,6 +6,8 @@ COMMAND=${1:-usage}
 BUILD_LOC=${BUILD_LOC:-/trafficserver}
 ATS_BRANCH=devel
 PREFIX=${PREFIX:-/usr/local}
+CCACHE_OPT=""
+MAKE_OPT=""
 
 function log() {
   printf "%s $1\n" "-->"
@@ -30,8 +32,8 @@ function submodules() {
 function build() {
   log "building source"
   autoreconf -if
-  ./configure --prefix=$PREFIX --enable-ccache
-  make
+  ./configure --prefix=$PREFIX $CCACHE_OPT
+  make $MAKE_OPT
 }
 
 function install() {
@@ -65,7 +67,7 @@ EOF
 
 function run() {
   log "Running traffic server via traffic_cop..."
-  $(/usr/local/bin/traffic_cop &) && sleep 5 && tail -f /usr/local/var/log/trafficserver/*
+  $(/usr/local/bin/traffic_cop &) && sleep 15 && tail -f /usr/local/var/log/trafficserver/*
 }
 
 function usage() {
@@ -80,7 +82,9 @@ Commands:
   run       : runs a currently installed trafficserver
 
 Options:
-  -b --branch  : specify a specific branch. Used for 'build' command. Default=$ATS_BRANCH
+  -b --branch   : specify a specific branch. Used for 'build' command. Default=$ATS_BRANCH
+  -c --ccache   : specify whether to use ccache or not
+  -p --parallel : specify whether to use parallel tasks for make
 
 EOF
 }
@@ -106,7 +110,7 @@ function buildParse() {
     *)
       # must be a branch then
       clone $ATS_BRANCH
-      # checkout
+      # checkout # don't use unless forcing, see clone above
       submodules
       build
       fingerprint $(githash)
@@ -127,13 +131,17 @@ function parse() {
         -b*|--branch*)
           ATS_BRANCH="${i#*=}"
           ;;
+        -c*|--ccache*)
+          CCACHE_OPT="--enable-ccache"
+          ;;
+        -p*|--parallel*)
+          MAKE_OPT="-j"
+          ;;
         *)
           ;;
     esac
   done
 }
-
-# pushd $BUILD_LOC
 
 case $COMMAND in
   usage)
@@ -142,6 +150,7 @@ case $COMMAND in
     ;;
   build)
     shift
+    ccache -s
     parse "$@"
     buildParse
     ccache -s
@@ -155,5 +164,3 @@ case $COMMAND in
     usage
     ;;
 esac
-
-# popd
