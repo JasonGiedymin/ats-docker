@@ -46,8 +46,11 @@ v0.4.0 - Enhance
 - [x] build and run vet
 - [x] parallel build flags
 - [x] bring back devel
-- [ ] fix weird tty background running issue 
+- [ ] fix weird tty background running issue
 - [ ] vet 6.x.x releases
+- [ ] `start` work flow
+- [ ] posix-ish
+- [ ] remove docker-driver or docker-entrypoint.sh all together for official images
 - [ ] ccache data container option
 - [ ] Run specifying a single remap config file
 - [ ] Run Cache mount

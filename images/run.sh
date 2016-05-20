@@ -1,13 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 
 COMMAND=${1:-usage}
-TAG=${2:-devel}
-LOCAL_CONFIG=/configs # this will be appended, this is not a fully qualified path
-# DOCKER_CONFIG=/trafficserver/proxy/config/records.config.default.in
-DOCKER_CONFIG=/usr/local/etc/trafficserver
-MOUNT_OPTS="-v $(PWD)$LOCAL_CONFIG:$DOCKER_CONFIG"
-USE_MOUNT=${USE_MOUNT:-false}
-OWNER=${OWNER:-trafficserver}
+
+setup() {
+  TAG=${TAG:-devel}
+  LOCAL_CONFIG=configs # this will be appended, this is not a fully qualified path
+  # DOCKER_CONFIG=/trafficserver/proxy/config/records.config.default.in
+  DOCKER_CONFIG=/usr/local/etc/trafficserver
+  MOUNT_OPTS="-v $(PWD)/$TAG/$LOCAL_CONFIG:$DOCKER_CONFIG"
+  USE_MOUNT=${USE_MOUNT:-false}
+  OWNER=${OWNER:-trafficserver}
+}
 
 function checkTag() {
   if [ -z $TAG ]; then
@@ -17,21 +20,23 @@ function checkTag() {
   fi
 }
 
-function runWithMount() {
+runWithMount() {
   local image=$OWNER:$1
   # echo "running $image with mounted volumes..."
 
-  docker run -ditP $MOUNT_OPTS $image
+  docker run --workdir=/ \
+    -dP $MOUNT_OPTS $image
 }
 
-function runWithoutMount() {
+runWithoutMount() {
   local image=$OWNER:$1
   # echo "running $image..."
 
-  docker run -ditP $image
+  docker run --workdir=/ \
+    -dP $image
 }
 
-function run() {
+run() {
   if ! [ $USE_MOUNT ]; then
     runWithoutMount $1
   else
@@ -84,11 +89,21 @@ case $COMMAND in
     parse "$@"
     ;;
   devel)
+    TAG=devel
+    setup
     shift
     parse "$@"
     run devel
     ;;
+  debug)
+    TAG=debug
+    setup
+    shift
+    parse "$@"
+    run debug
+    ;;
   tag)
+    setup
     shift 2
     parse "$@"
     run $TAG

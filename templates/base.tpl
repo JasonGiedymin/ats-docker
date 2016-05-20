@@ -3,6 +3,7 @@ MAINTAINER apache-traffic-server
 
 # Volumes
 VOLUME /ccache
+VOLUME /usr/local/etc/trafficserver
 
 # Environment
 ENV BUILD_LOC /trafficserver

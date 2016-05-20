@@ -65,9 +65,28 @@ CONFIG proxy.config.admin.user_id STRING #-1
 EOF
 }
 
+wait_file() {
+  local file="$1"; shift
+  local wait_seconds="${1:-10}"; shift # 10 seconds as default timeout
+
+  until test $((wait_seconds--)) -eq 0 -o -f "$file" ; do sleep 1; done
+
+  ((++wait_seconds))
+}
+
 function run() {
-  log "Running traffic server via traffic_cop..."
-  $(/usr/local/bin/traffic_cop &) && sleep 15 && tail -f /usr/local/var/log/trafficserver/*
+  log "Running traffic server..."
+  logfile=/usr/local/var/log/trafficserver/manager.log
+  logloc=/usr/local/var/log/trafficserver
+
+  /usr/local/bin/trafficserver start
+
+  wait_file "$logfile" 20 || {
+    echo "TrafficServer log file missing after waiting for 20 seconds: '$logfile'"
+    exit 1
+  }
+
+  tail -f $logloc/*
 }
 
 function usage() {

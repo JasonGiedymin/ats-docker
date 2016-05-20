@@ -7,51 +7,52 @@ BUILD_LOC=${BUILD_LOC:-/trafficserver}
 ATS_BRANCH=devel
 PREFIX=${PREFIX:-/usr/local}
 CCACHE_OPT=""
+MAKE_OPT=""
 
-log() {
+function log() {
   printf "%s $1\n" "-->"
 }
 
-clone() {
+function clone() {
   log "cloning repo"
   git clone --branch $1 https://github.com/apache/trafficserver.git .
 }
 
-checkout() {
+function checkout() {
   log "switching to branch $1"
   git checkout $1
 }
 
-submodules() {
+function submodules() {
   log "initializing submodules"
   git submodule init
   git submodule update
 }
 
-build() {
+function build() {
   log "building source"
   autoreconf -if
   ./configure --prefix=$PREFIX $CCACHE_OPT
-  make -j
+  make $MAKE_OPT
 }
 
-install() {
+function install() {
   log "installing..."
   sudo make install
 }
 
-githash() {
+function githash() {
   printf $(git rev-parse HEAD)
 }
 
-fingerprint() {
+function fingerprint() {
   hash=$1
   log "fingerprinting records.config"
   header="##############################################################################\n# Commit: $hash"
   sed -i "1i$header" ./proxy/config/records.config.default
 }
 
-fixSharedLibUserSwitching() {
+function fixSharedLibUserSwitching() {
 cat << EOF >> ./proxy/config/records.config.default
 
 ##############################################################################
@@ -64,12 +65,31 @@ CONFIG proxy.config.admin.user_id STRING #-1
 EOF
 }
 
-run() {
-  log "Running traffic server via traffic_cop..."
-  $(/usr/local/bin/traffic_cop &) && sleep 5 && tail -f /usr/local/var/log/trafficserver/*
+wait_file() {
+  local file="$1"; shift
+  local wait_seconds="${1:-10}"; shift # 10 seconds as default timeout
+
+  until test $((wait_seconds--)) -eq 0 -o -f "$file" ; do sleep 1; done
+
+  ((++wait_seconds))
 }
 
-usage() {
+function run() {
+  log "Running traffic server..."
+  logfile=/usr/local/var/log/trafficserver/manager.log
+  logloc=/usr/local/var/log/trafficserver
+
+  /usr/local/bin/trafficserver start
+
+  wait_file "$logfile" 20 || {
+    echo "TrafficServer log file missing after waiting for 20 seconds: '$logfile'"
+    exit 1
+  }
+
+  tail -f $logloc/*
+}
+
+function usage() {
 cat<<EOF
 
 Usage:
@@ -81,12 +101,14 @@ Commands:
   run       : runs a currently installed trafficserver
 
 Options:
-  -b --branch  : specify a specific branch. Used for 'build' command. Default=$ATS_BRANCH
+  -b --branch   : specify a specific branch. Used for 'build' command. Default=$ATS_BRANCH
+  -c --ccache   : specify whether to use ccache or not
+  -p --parallel : specify whether to use parallel tasks for make
 
 EOF
 }
 
-buildParse() {
+function buildParse() {
   log "building branch $ATS_BRANCH"
 
   case $ATS_BRANCH in
@@ -107,7 +129,7 @@ buildParse() {
     *)
       # must be a branch then
       clone $ATS_BRANCH
-      # checkout
+      # checkout # don't use unless forcing, see clone above
       submodules
       build
       fingerprint $(githash)
@@ -117,7 +139,7 @@ buildParse() {
   esac
 }
 
-parse() {
+function parse() {
   if [ ! -n "$0" ]; then
     echo "You passed the following options: $@"
   fi
@@ -130,6 +152,9 @@ parse() {
           ;;
         -c*|--ccache*)
           CCACHE_OPT="--enable-ccache"
+          ;;
+        -p*|--parallel*)
+          MAKE_OPT="-j"
           ;;
         *)
           ;;

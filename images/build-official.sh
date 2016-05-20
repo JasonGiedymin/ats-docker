@@ -16,7 +16,7 @@ build() {
   fi
 
   pushd $1
-  
+
   set +e
   echo "Attempting removal of $OWNER:$1, otherwise moving on..."
   docker rmi $OWNER:$1
@@ -31,11 +31,19 @@ case $1 in
     build "6.1.0"
     build "6.1.1"
     ;;
-  version)
+  branch)
     shift
     build $1
     ;;
+  devel)
+    shift
+    build devel
+    ;;
+  debug)
+    shift
+    build debug
+    ;;
   *)
-    echo "$0 {all|version}"
+    echo "$0 {all|branch|devel}"
     ;;
 esac

@@ -3,6 +3,7 @@ MAINTAINER apache-traffic-server
 
 # Volumes
 VOLUME /ccache
+VOLUME /usr/local/etc/trafficserver
 
 # Environment
 ENV BUILD_LOC /trafficserver
@@ -35,6 +36,11 @@ RUN mkdir -p /usr/local/etc/trafficserver/snapshots
 # Add Dockerfile for reference
 ADD ./Dockerfile /Dockerfile
 
+# Copy entrypoint, set perms
 COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
+# Build
 RUN bash /docker-entrypoint.sh build -b="6.1.0"
-ENTRYPOINT ["bash", "/docker-entrypoint.sh", "run"]
+
+ENTRYPOINT [/docker-entrypoint.sh", "run"]

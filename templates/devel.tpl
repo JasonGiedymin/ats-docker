@@ -3,6 +3,7 @@ MAINTAINER apache-traffic-server
 
 # Volumes
 VOLUME /ccache
+VOLUME /usr/local/etc/trafficserver
 
 # Add Dockerfile for reference
 ADD ./_Dockerfile /Dockerfile
@@ -28,7 +29,7 @@ EXPOSE 443
 EXPOSE 563
 
 # Build
-CMD bash /ats.sh build -b="%s" --ccache --parallel
+CMD bash /ats.sh build -b="%s" --ccache
 
 # Run the service
 # CMD bash /ats.sh run
